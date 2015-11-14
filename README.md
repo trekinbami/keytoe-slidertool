@@ -1,5 +1,5 @@
 # keytoe-slidertool
-v0.1 van de slidertool. Later worden markup, classes nog variabel.
+v0.1 van de slidertool. Later worden markup, classes nog variabel. Gebruikt Velocity voor animaties.
 
 HTML:
 ```
