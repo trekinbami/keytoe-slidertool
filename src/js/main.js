@@ -1,5 +1,7 @@
 $(function(){
-	SliderTool.init();
+	SliderTool.init({
+		navClass: 'toet'
+	});
 });
 
 $(window).resize( function(){

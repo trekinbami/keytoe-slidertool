@@ -1,20 +1,27 @@
 var SliderTool = {
 	defaults: {
-		navigation: {
-			cntClass: 'slidertool-nav',
-			currentClass: 'current',
-			cntEl: 'li'
-		},
-		slider: {
-			mainCnt: 'slidertool',
-			mainCntInner: 'slidertool__inner',
-			mainSlideClass: 'main-slide',
-			subSlideClass: 'sub-slide',
-			activeClass: 'active',
-			startSlide: 1,
-			btnNextClass: 'btn--next',
-			btnPrevClass: 'btn--prev'
-		}
+		navClass: 'slidertool-nav',
+		navActiveClass: 'current',
+		navElement: 'li',
+		mainCnt: 'slidertool',
+		mainCntInner: 'slidertool__inner',
+		mainSlideClass: 'main-slide',
+		activeClass: 'active',
+		startSlide: 1,
+		btnNextClass: 'btn--next',
+		btnPrevClass: 'btn--prev'
+	},
+	parameters: {
+
+	},
+	_setParameters: function(argumentObj){
+		$.each(this.defaults, function(index, value){
+			if( index in argumentObj ){
+				SliderTool.parameters[index] = argumentObj[index]; 
+			}	else{
+				SliderTool.parameters[index] = SliderTool.defaults[index];
+			}
+		});
 	},
 	layout:{
 		_highestArrayVal: function(arr){
@@ -24,7 +31,7 @@ var SliderTool = {
 			return Math.min.apply(Math, arr);
 		},
 		calculateHeights: function(){
-			var main_slide = SliderTool.defaults.slider.mainSlideClass,
+			var main_slide = SliderTool.parameters.mainSlideClass,
 				main_heights = [],
 				high_height;
 
@@ -39,14 +46,14 @@ var SliderTool = {
 			high_height = SliderTool.layout._highestArrayVal(main_heights);
 
 			//container de hoogte van de hoogste value meegeven
-			$('.'+SliderTool.defaults.slider.mainCnt).height(high_height);
+			$('.'+SliderTool.parameters.mainCnt).height(high_height);
 
 			//slide 100% hoogte maken
 			$('.'+main_slide).css('height','100%');
 		},
 		calculateSizes: function(){
-			var cnt = $('.'+SliderTool.defaults.slider.mainCntInner),
-			slide_width = $('.'+SliderTool.defaults.slider.mainCnt).width(),
+			var cnt = $('.'+SliderTool.parameters.mainCntInner),
+			slide_width = $('.'+SliderTool.parameters.mainCnt).width(),
 			cnt_width = slide_width;
 
 			//bij het laden van de pagina is cnt_width even breed als een slide
@@ -58,7 +65,7 @@ var SliderTool = {
 			//slidewidth blijft hetzelfde, dus die hoeft niet berekend te worden
 			} else{
 				//bij een resize van de pagina is slide_width groter/kleiner dan de cnt/width -> opnieuw berekenen
-				slide_width = $('.'+SliderTool.defaults.slider.mainCnt).width();
+				slide_width = $('.'+SliderTool.parameters.mainCnt).width();
 
 				//ook de container opnieuw berekenen
 				cnt.children().each(function(){
@@ -66,7 +73,7 @@ var SliderTool = {
 				});
 			}
 
-			$('.'+SliderTool.defaults.slider.mainSlideClass).width(slide_width);
+			$('.'+SliderTool.parameters.mainSlideClass).width(slide_width);
 		}
 	},
 	forms: {
@@ -76,29 +83,29 @@ var SliderTool = {
 		}
 	},
 	slider: {
-		_getHightestMainSlide: function(direction){
+		_getHighestMainSlide: function(direction){
 			var main_nrs = [];
 
-			$('.'+SliderTool.defaults.slider.mainSlideClass).each(function(){				
+			$('.'+SliderTool.parameters.mainSlideClass).each(function(){				
 				var this_nr = $(this).attr('data-mainslide');
 				main_nrs.push(this_nr);
 			});
 
-			if( direction === undefined || direction === "forward" ){
+			if( typeof direction === 'undefined' || direction === "forward" ){
 				return SliderTool.layout._highestArrayVal(main_nrs);
 			}	else{
 				return SliderTool.layout._lowestArrayVal(main_nrs);
 			}
 		},
 		_getActiveSubslides: function(direction){
-			var activeNr = $('.'+SliderTool.defaults.slider.mainSlideClass+'.active').data('mainslide'),
+			var activeNr = $('.'+SliderTool.parameters.mainSlideClass+'.active').data('mainslide'),
 				subslideNrs = [];
 
-			$('.'+SliderTool.defaults.slider.mainSlideClass+'[data-mainslide='+activeNr+']').each(function(){
+			$('.'+SliderTool.parameters.mainSlideClass+'[data-mainslide='+activeNr+']').each(function(){
 				subslideNrs.push($(this).attr('data-subslide'));
 			});
 
-			if( direction === undefined || direction === "forward" ){
+			if( typeof direction === 'undefined' || direction === "forward" ){
 				return SliderTool.layout._highestArrayVal(subslideNrs);
 			}	else{
 				return SliderTool.layout._lowestArrayVal(subslideNrs);
@@ -107,7 +114,7 @@ var SliderTool = {
 		_getSubslide: function(index, location){
 			var subslideNrs = [];
 
-			$('.'+SliderTool.defaults.slider.mainSlideClass+'[data-mainslide="'+index+'"]').each(function(){
+			$('.'+SliderTool.parameters.mainSlideClass+'[data-mainslide="'+index+'"]').each(function(){
 				subslideNrs.push($(this).attr('data-subslide'));
 			});
 
@@ -118,22 +125,22 @@ var SliderTool = {
 			}
 		},
 		_selectScreen: function(direction){
-			var active_main = parseInt($('.'+SliderTool.defaults.slider.activeClass).attr('data-mainslide'), 10),
-				active_sub = $('.'+SliderTool.defaults.slider.activeClass).attr('data-subslide'),
-				slide_width = $('.'+SliderTool.defaults.slider.mainCnt).width(),
-				highTotal = this._getHightestMainSlide(direction),
+			var active_main = parseInt($('.'+SliderTool.parameters.activeClass).attr('data-mainslide'), 10),
+				active_sub = $('.'+SliderTool.parameters.activeClass).attr('data-subslide'),
+				slide_width = $('.'+SliderTool.parameters.mainCnt).width(),
+				highTotal = this._getHighestMainSlide(direction),
 				subTotal = this._getActiveSubslides(direction),
 				this_index,
 				subLocation;
 
-			if( $('.'+SliderTool.defaults.slider.mainSlideClass+'[data-mainslide='+highTotal+'][data-subslide='+subTotal+']').is('.active') ){
+			if( $('.'+SliderTool.parameters.mainSlideClass+'[data-mainslide='+highTotal+'][data-subslide='+subTotal+']').is('.active') ){
 				return false;
 			}
 				else{
 					//als het de laatste subslide van een mainslide, de volgende mainslide pakken
 					if( $('.main-slide.active[data-subslide="'+subTotal+'"]').is('.active') ){
 						
-						if( direction === undefined || direction === "forward"){
+						if( typeof direction === 'undefined' || direction === "forward"){
 							this_index = (parseInt(active_main, 10)+1);
 							subLocation = "low";
 						} 	else{
@@ -143,23 +150,23 @@ var SliderTool = {
 						}
 
 						var ss = this._getSubslide(this_index, subLocation);
-						var firstSlide = $('.'+SliderTool.defaults.slider.mainSlideClass+'[data-mainslide="'+this_index+'"][data-subslide="'+ss+'"]');
+						var firstSlide = $('.'+SliderTool.parameters.mainSlideClass+'[data-mainslide="'+this_index+'"][data-subslide="'+ss+'"]');
 
 						firstSlide
 							.css({'left': slide_width, 'z-index': '1'})
 							.detach();
 
-						if( direction === undefined || direction === "forward"){
-							firstSlide.insertAfter('.'+SliderTool.defaults.slider.activeClass);
+						if( typeof direction === 'undefined' || direction === "forward"){
+							firstSlide.insertAfter('.'+SliderTool.parameters.activeClass);
 							this.animateScreen("forward");
 						} 	else{
-							firstSlide.insertBefore('.'+SliderTool.defaults.slider.activeClass);
+							firstSlide.insertBefore('.'+SliderTool.parameters.activeClass);
 								this.animateScreen("back");
 						}
 					}	else{
 							
 							//variabelen zetten op basis van richting
-							if( direction === undefined || direction === "forward"){
+							if( typeof direction === 'undefined' || direction === "forward"){
 								this_index = (parseInt(active_sub, 10)+1);
 								
 							} 	else{
@@ -176,18 +183,18 @@ var SliderTool = {
 								.detach();
 
 							//gaan
-							if( direction === undefined || direction === "forward"){
-								justSlide.insertAfter('.'+SliderTool.defaults.slider.activeClass);
+							if( typeof direction === 'undefined' || direction === "forward"){
+								justSlide.insertAfter('.'+SliderTool.parameters.activeClass);
 								this.animateScreen("forward");
 							} 	else{
-								justSlide.insertBefore('.'+SliderTool.defaults.slider.activeClass);
+								justSlide.insertBefore('.'+SliderTool.parameters.activeClass);
 									this.animateScreen("back");
 							}
 					}
 				}
 		},
 		setSizes:function(){
-			$('.'+SliderTool.defaults.slider.mainSlideClass).css({
+			$('.'+SliderTool.parameters.mainSlideClass).css({
 				'position':'absolute',
 				'left': '0',
 				'top': '0',
@@ -195,20 +202,20 @@ var SliderTool = {
 			});
 		},
 		setActive: function(){
-			var adjustedStart = (SliderTool.defaults.slider.startSlide - 1);
+			var adjustedStart = (SliderTool.parameters.startSlide - 1);
 
-			$('.'+SliderTool.defaults.slider.mainSlideClass)
+			$('.'+SliderTool.parameters.mainSlideClass)
 				.eq(adjustedStart)
-				.addClass(SliderTool.defaults.slider.activeClass)
+				.addClass(SliderTool.parameters.activeClass)
 				.css('opacity', '1');
 		},
 		animateScreen: function(direction){
-			var slide_width = parseInt($('.'+SliderTool.defaults.slider.mainCnt).width()),
-				activeScreen = $('.'+SliderTool.defaults.slider.activeClass),
+			var slide_width = parseInt($('.'+SliderTool.parameters.mainCnt).width()),
+				activeScreen = $('.'+SliderTool.parameters.activeClass),
 				slideAmount,
 				screenComing;
 
-			if( direction === undefined || direction === "forward"){
+			if( typeof direction === 'undefined' || direction === "forward"){
 				slideAmount = -slide_width;
 				screenComing = activeScreen.next();
 			}	else{
@@ -244,12 +251,12 @@ var SliderTool = {
 		},
 		eventHandlers: function(){
 			$('body')
-				.on('click', '.'+SliderTool.defaults.slider.btnNextClass, function(e){
+				.on('click', '.'+SliderTool.parameters.btnNextClass, function(e){
 					e.preventDefault();
 					SliderTool.slider._selectScreen("forward");
 					
 				})
-				.on('click', '.'+SliderTool.defaults.slider.btnPrevClass, function(e){
+				.on('click', '.'+SliderTool.parameters.btnPrevClass, function(e){
 					e.preventDefault();
 					SliderTool.slider._selectScreen("back");					
 				});
@@ -259,7 +266,9 @@ var SliderTool = {
 		this.layout.calculateHeights();
 		this.layout.calculateSizes();
 	},
-	init: function(){
+	init: function(argumentObj){
+		this._setParameters(argumentObj);
+
 		this.layout.calculateHeights();
 		this.layout.calculateSizes();
 		this.slider.setSizes();

@@ -1,10 +1,37 @@
 # keytoe-slidertool
-v0.1 van de slidertool. Later worden markup, classes nog variabel. Gebruikt Velocity voor animaties.
+v0.2 van de slidertool.
+
+Init:
+```
+SliderTool.init();
+```
+
+Je kunt hier een object meegeven als parameter, waarin je met key/value pairs classes kunt aanpassen:
+
+```
+SliderTool.init({
+	mainCnt: 'slidertool', 						//wrapper container
+	mainCntInner: 'slidertool__inner',		//inner wrapper container
+	mainSlideClass: 'main-slide',				//class van de slide
+	activeClass: 'active',						//actieve class van de mainslide
+	startSlide: 1,									//op welke slide de slider moet starten
+	btnNextClass: 'btn--next',					//class van de next knop
+	btnPrevClass: 'btn--prev'					//class van de back knop
+});
+```
+
+
+Op de window.resize kun je deze method gebruiken, waarbij hij automatisch alle afmetingen aanpast (voor responsive);
+
+```
+SliderTool.resize();
+```
+
 
 HTML:
 ```
 <div class="slidertool">
-	<div id="scroll-cnt" class="slidertool__inner">
+	<div class="slidertool__inner">
 		<article class="main-slide" data-mainslide="1" data-subslide="1">
 			<p>Your content</p>
 		</article>
@@ -14,16 +41,10 @@ HTML:
 		<article class="main-slide" data-mainslide="2" data-subslide="1">
 			<p>Your content</p>
 		</article>
+		<button class="btn btn--prev">Previous</button>
+		<button class="btn btn--next">Next</button>
 	</div>
 </div>
 ```
 
-Init:
-```
-SliderTool.init();
-```
 
-Resize:
-```
-SliderTool.resize();
-```
