@@ -11,10 +11,10 @@ Je kunt hier een object meegeven als parameter, waarin je met key/value pairs cl
 ```
 SliderTool.init({
 	mainCnt: 'slidertool', 						//wrapper container
-	mainCntInner: 'slidertool__inner',		//inner wrapper container
+	mainCntInner: 'slidertool__inner',			//inner wrapper container
 	mainSlideClass: 'main-slide',				//class van de slide
 	activeClass: 'active',						//actieve class van de mainslide
-	startSlide: 1,									//op welke slide de slider moet starten
+	startSlide: 1,								//op welke slide de slider moet starten
 	btnNextClass: 'btn--next',					//class van de next knop
 	btnPrevClass: 'btn--prev'					//class van de back knop
 });
