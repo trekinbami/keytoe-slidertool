@@ -1,9 +1,6 @@
 /* -------------------------------------------
-	Layout
+	Layout (obligatory)
 --------------------------------------------*/
-.tool-wrapper {
-  margin: 50px auto; }
-
 .slidertool {
   position: relative;
   width: 100%;
@@ -12,14 +9,34 @@
 .slidertool__inner {
   border: 0;
   margin: 0;
-  padding: 0; }
-
-#scroll-cnt {
+  padding: 0;
   position: relative;
   height: 100%; }
 
 .main-slide {
-  background: #FFFFFF;
   overflow: hidden; }
   .main-slide.active {
     z-index: 1; }
+
+/* -------------------------------------------
+	Styles (optional)
+--------------------------------------------*/
+.tool-wrapper {
+  margin: 50px auto;
+  width: 80%;
+  font-family: "Lucida Grande";
+  color: #4D4D4D; }
+
+.main-slide h1 {
+  margin-bottom: 0;
+  color: #1F1F1F; }
+
+.main-slide h2 {
+  color: #1F1F1F;
+  font-size: 1em;
+  margin-top: 0;
+  color: #BBBBBB;
+  font-weight: normal; }
+
+p {
+  line-height: 150%; }

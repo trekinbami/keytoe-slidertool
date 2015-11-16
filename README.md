@@ -1,12 +1,12 @@
 # keytoe-slidertool
-v0.2 van de slidertool.
+v0.2 van de slidertool. Ik gebruik Velocity library (https://github.com/julianshapiro/velocity) voor de animatie.
 
 Init:
 ```
 SliderTool.init();
 ```
 
-Je kunt hier een object meegeven als parameter, waarin je met key/value pairs classes kunt aanpassen:
+Je kunt hier een object meegeven als parameter, waarin je met key/value pairs classes kunt aanpassen. De waarden die hieronder staan zijn de default waarden.
 
 ```
 SliderTool.init({
@@ -28,7 +28,10 @@ SliderTool.resize();
 ```
 
 
-HTML:
+Dit is de HTML die je kunt gebruiken. Markup is compleet optioneel zolang de opbouw maar klopt. Dus cnt -> inner -> slide[data-mainslide][data-subslide]. Ook de volgorde in de HTML maakt niet uit. De code kijkt naar de volorde van de data-attributen. 
+
+De buttons gaan af op de actieve slide, dus het maakt niet uit waar ze staan. Je mag de buttons per slide zetten, de buttons buiten de slide zetten, de next button in de slide en de back button buiten de slide, etc.
+
 ```
 <div class="slidertool">
 	<div class="slidertool__inner">

@@ -15,7 +15,7 @@ var SliderTool = {
 
 	},
 	_setParameters: function(argumentObj){
-		$.each(this.defaults, function(index, value){
+		$.each(this.defaults, function(index){
 			if( index in argumentObj ){
 				SliderTool.parameters[index] = argumentObj[index]; 
 			}	else{
@@ -263,14 +263,16 @@ var SliderTool = {
 		}
 	},
 	resize: function(){
-		this.layout.calculateHeights();
 		this.layout.calculateSizes();
+		this.layout.calculateHeights();
+		
 	},
 	init: function(argumentObj){
 		this._setParameters(argumentObj);
 
-		this.layout.calculateHeights();
 		this.layout.calculateSizes();
+		this.layout.calculateHeights();
+		
 		this.slider.setSizes();
 		this.slider.setActive();
 		this.slider.eventHandlers();
