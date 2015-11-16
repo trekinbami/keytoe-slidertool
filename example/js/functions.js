@@ -30,6 +30,9 @@ var SliderTool = {
 		_lowestArrayVal: function(arr){
 			return Math.min.apply(Math, arr);
 		},
+		getCntWidth: function(){
+			return $('.'+SliderTool.parameters.mainCnt).width();
+		},
 		calculateHeights: function(){
 			var main_slide = SliderTool.parameters.mainSlideClass,
 				main_heights = [],
@@ -52,28 +55,11 @@ var SliderTool = {
 			$('.'+main_slide).css('height','100%');
 		},
 		calculateSizes: function(){
-			var cnt = $('.'+SliderTool.parameters.mainCntInner),
-			slide_width = $('.'+SliderTool.parameters.mainCnt).width(),
-			cnt_width = slide_width;
+			var cnt_width = $('.'+SliderTool.parameters.mainCnt).width();
 
-			//bij het laden van de pagina is cnt_width even breed als een slide
-			if( cnt_width === slide_width){
-				//de daadwerkelijke breedte berekenen
-				cnt.children().each(function(){
-					cnt_width = cnt_width+$(this).width();
-				});
-			//slidewidth blijft hetzelfde, dus die hoeft niet berekend te worden
-			} else{
-				//bij een resize van de pagina is slide_width groter/kleiner dan de cnt/width -> opnieuw berekenen
-				slide_width = $('.'+SliderTool.parameters.mainCnt).width();
-
-				//ook de container opnieuw berekenen
-				cnt.children().each(function(){
-					cnt_width = cnt_width+$(this).width();
-				});
-			}
-
-			$('.'+SliderTool.parameters.mainSlideClass).width(slide_width);
+			$('.'+SliderTool.parameters.mainSlideClass).width(cnt_width);
+			$('.'+SliderTool.parameters.mainSlideClass+'.'+SliderTool.parameters.activeClass).prevAll().css('left',-cnt_width);
+			$('.'+SliderTool.parameters.mainSlideClass+'.'+SliderTool.parameters.activeClass).nextAll().css('left',cnt_width);
 		}
 	},
 	forms: {
@@ -193,21 +179,13 @@ var SliderTool = {
 					}
 				}
 		},
-		setSizes:function(){
-			$('.'+SliderTool.parameters.mainSlideClass).css({
-				'position':'absolute',
-				'left': '0',
-				'top': '0',
-				'opacity':'0'
-			});
-		},
 		setActive: function(){
 			var adjustedStart = (SliderTool.parameters.startSlide - 1);
 
 			$('.'+SliderTool.parameters.mainSlideClass)
 				.eq(adjustedStart)
 				.addClass(SliderTool.parameters.activeClass)
-				.css('opacity', '1');
+				.css({'opacity': '1', 'z-index':'2'});
 		},
 		animateScreen: function(direction){
 			var slide_width = parseInt($('.'+SliderTool.parameters.mainCnt).width()),
@@ -229,7 +207,7 @@ var SliderTool = {
 			},{
 				duration: 500,
 				complete: function(){
-					$(this).css('opacity','');
+					$(this).css({'opacity':'', 'z-index':''});
 				}
 			});
 
@@ -238,14 +216,14 @@ var SliderTool = {
 			screenComing
 				.velocity({
 					"left": 0,
-					"opacity": 1
+					"opacity": 1,
 				},{
 					duration:500,
 					complete: function(){
 						SliderTool.layout.calculateHeights();
 						$('body').velocity("scroll", {duration: 200});
 						
-						$(this).addClass('active');
+						$(this).css('z-index','2').addClass('active');
 					}
 				});
 		},
@@ -276,7 +254,6 @@ var SliderTool = {
 		//fix sizes
 		this.layout.calculateSizes();
 		this.layout.calculateHeights();
-		this.slider.setSizes();
 
 		//set active
 		this.slider.setActive();
