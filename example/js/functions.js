@@ -254,7 +254,6 @@ var SliderTool = {
 				.on('click', '.'+SliderTool.parameters.btnNextClass, function(e){
 					e.preventDefault();
 					SliderTool.slider._selectScreen("forward");
-					
 				})
 				.on('click', '.'+SliderTool.parameters.btnPrevClass, function(e){
 					e.preventDefault();
@@ -265,16 +264,24 @@ var SliderTool = {
 	resize: function(){
 		this.layout.calculateSizes();
 		this.layout.calculateHeights();
-		
 	},
 	init: function(argumentObj){
+		if( typeof argumentObj === 'undefined' ){
+			argumentObj = SliderTool.defaults;
+		}
+
+		//set parameters
 		this._setParameters(argumentObj);
 
+		//fix sizes
 		this.layout.calculateSizes();
 		this.layout.calculateHeights();
-		
 		this.slider.setSizes();
+
+		//set active
 		this.slider.setActive();
+
+		//eventhandlers
 		this.slider.eventHandlers();
 	}
 };
